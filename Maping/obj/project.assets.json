@@ -2311,11 +2311,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Manuel Montero\\Documents\\Mapificacion\\Maping\\Maping.csproj",
+      "projectUniqueName": "c:\\Users\\Manuel Montero\\Documents\\GitHub\\mdialityc-maping\\Maping\\Maping.csproj",
       "projectName": "Maping",
-      "projectPath": "C:\\Users\\Manuel Montero\\Documents\\Mapificacion\\Maping\\Maping.csproj",
+      "projectPath": "c:\\Users\\Manuel Montero\\Documents\\GitHub\\mdialityc-maping\\Maping\\Maping.csproj",
       "packagesPath": "C:\\Users\\Manuel Montero\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Manuel Montero\\Documents\\Mapificacion\\Maping\\obj\\",
+      "outputPath": "c:\\Users\\Manuel Montero\\Documents\\GitHub\\mdialityc-maping\\Maping\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Manuel Montero\\AppData\\Roaming\\NuGet\\NuGet.Config"
