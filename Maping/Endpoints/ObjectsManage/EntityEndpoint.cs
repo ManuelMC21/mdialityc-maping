@@ -53,11 +53,29 @@ public static class EntityEndpoint
         })
         .WithTags("Entity");
 
+        app.MapGet("/api/entities/{id}", async (int id, AppDbContext db) =>
+        {
+            var entities = await db.Entities
+                .Where(e => e.Id == id)
+                .Select(e => new
+                {
+                    Id = e.Id,
+                    DistrictId = e.DistrictId,
+                    latitude = e.Geom.Coordinate.X,
+                    longitude = e.Geom.Coordinate.Y
+                })
+                .ToListAsync();
+
+            return Results.Ok(entities);
+
+        }).WithTags("Entity");
+
         app.MapGet("/api/entities", async (AppDbContext db) =>
         {
             var entities = await db.Entities
-                .Select(e => new EntityDto
+                .Select(e => new
                 {
+                    Id = e.Id,
                     DistrictId = e.DistrictId,
                     latitude = e.Geom.Coordinate.X,
                     longitude = e.Geom.Coordinate.Y,

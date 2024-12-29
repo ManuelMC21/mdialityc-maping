@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "p2PRYsqxRao=",
+  "dgSpecHash": "h5NHRe9vZyg=",
   "success": true,
-  "projectFilePath": "c:\\Users\\Manuel Montero\\Documents\\GitHub\\mdialityc-maping\\Maping\\Maping.csproj",
+  "projectFilePath": "C:\\Users\\Manuel Montero\\Documents\\GitHub\\mdialityc-maping\\Maping\\Maping.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Manuel Montero\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Manuel Montero\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.0\\microsoft.aspnetcore.authentication.jwtbearer.8.0.0.nupkg.sha512",
