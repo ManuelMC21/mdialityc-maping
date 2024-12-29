@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
+using NetTopologySuite.Utilities;
 
 public static class EntityEndpoint
 {
@@ -102,6 +103,45 @@ public static class EntityEndpoint
             return Results.Ok(entities);
         })
         .WithTags("Entity");
+
+        app.MapGet("/api/entities/nearby", async (double lat, double lng, double distance, AppDbContext db) =>
+        {
+            const double EarthRadiusKm = 6371;
+
+            var entities = await db.Entities
+                .Select(e => new
+                {
+                    Id = e.Id,
+                    DistrictId = e.DistrictId,
+                    latitude = e.Geom.Coordinate.X,
+                    longitude = e.Geom.Coordinate.Y
+                }).ToListAsync();
+
+            var nearbyEntities = entities
+                .Where(e =>
+                {
+                    var dLat = DegressToRadians(e.latitude - lat);
+                    var dLon = DegressToRadians(e.longitude - lng);
+                    var lat1 = DegressToRadians(lat);
+                    var lat2 = DegressToRadians(e.latitude);
+
+                    var a = Math.Pow(Math.Sin(dLat / 2), 2) + Math.Pow(Math.Sin(dLon / 2), 2)
+                        * Math.Cos(lat1) * Math.Cos(lat2);
+
+                    var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+                    var distanceKm = EarthRadiusKm * c;
+
+                    return distanceKm <= distance / 1000;
+                })
+                .ToList();
+
+            return Results.Ok(nearbyEntities);
+        }).WithTags("Entity");
+    }
+
+    private static double DegressToRadians(double degress)
+    {
+        return degress * Math.PI / 180;
     }
 }
 
