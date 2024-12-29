@@ -31,7 +31,6 @@ public static class EntityEndpoint
 
                 var entity = new Entity
                 {
-                    Id = dto.Id,
                     DistrictId = dto.DistrictId,
                     EntityTypeId = dto.EntityTypeId,
                     UserId = user.Id,
@@ -44,7 +43,7 @@ public static class EntityEndpoint
                 return Results.Ok(new
                 {
                     message = "Entity has been created",
-                    retId = dto.Id
+                    retId = entity.Id
                 });
             }
             catch (Exception ex)
@@ -60,7 +59,6 @@ public static class EntityEndpoint
                 .Select(e => new EntityDto
                 {
                     DistrictId = e.DistrictId,
-                    Id = e.Id,
                     latitude = e.Geom.Coordinate.X,
                     longitude = e.Geom.Coordinate.Y,
                 })
