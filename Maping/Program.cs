@@ -124,6 +124,7 @@ app.MapEntityTypeEndPoints();
 app.MapRoleEndpoints();
 app.MapRestaurantEndpoints();
 app.MapImageEndpoints();
+app.MapFormEndpoints();
 
 app.UseStaticFiles(new StaticFileOptions
 {

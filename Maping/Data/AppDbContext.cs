@@ -10,6 +10,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Province> Provinces => Set<Province>();
     public DbSet<Restaurant> Restaurants => Set<Restaurant>();
     public DbSet<EntityType> Types => Set<EntityType>();
+    public DbSet<Form> Forms => Set<Form>();
+    public DbSet<FormField> Fields => Set<FormField>();
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=Mapificacion;User Id=postgres;Password=manu04",
@@ -18,6 +20,12 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
 
     protected override void OnModelCreating(ModelBuilder mb)
     {
+        mb.Entity<Form>()
+            .HasMany(ff => ff.Fields)
+            .WithOne(f => f.Form)
+            .HasForeignKey(f => f.FormId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         mb.Entity<Entity>()
             .HasOne(e => e.user)
             .WithMany(u => u.entities)
