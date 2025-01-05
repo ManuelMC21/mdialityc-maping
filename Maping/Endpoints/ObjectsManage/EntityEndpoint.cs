@@ -12,6 +12,33 @@ public static class EntityEndpoint
 
     public static void MapEntityEndpoints(this IEndpointRouteBuilder app)
     {
+        app.MapPatch("/api/update-entity/{id:int}", async (int id, AppDbContext db, UpdateEntity up) =>
+        {
+            var entityToUpdate = await db.Entities.FindAsync(id);
+            if (entityToUpdate == null)
+            {
+                return Results.BadRequest("Entity Not Found");
+            }
+
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory();
+
+            if (up.latitude > 180 || up.latitude < -180 || up.longitude > 180 || up.longitude < -180)
+            {
+                return Results.BadRequest("Check latitude and longitude");
+            }
+
+            var point = geometryFactory.CreatePoint(new Coordinate(up.longitude, up.latitude));
+
+            entityToUpdate.Geom = point;
+            entityToUpdate.DistrictId = up.DistrictId;
+            entityToUpdate.EntityTypeId = up.EntityTypeId;
+
+            db.Entities.Update(entityToUpdate);
+            await db.SaveChangesAsync();
+
+            return Results.Ok("Entity Updated");
+        }).WithTags("Entity");
+
         app.MapPost("/api/entities", [Authorize(Roles = "Admin,User")] async (EntityDto dto, UserManager<ApplicationUser> userManager, HttpContext httpContext, AppDbContext db) =>
         {
             var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory();
@@ -136,6 +163,22 @@ public static class EntityEndpoint
                 .ToList();
 
             return Results.Ok(nearbyEntities);
+        }).WithTags("Entity");
+
+        app.MapDelete("/api/delete-entity", async (int id, AppDbContext db) =>
+        {
+
+            var entityToDelete = await db.Entities.FindAsync(id);
+            if (entityToDelete == null)
+            {
+                return Results.BadRequest("Entity Not Found");
+            }
+
+            db.Entities.Remove(entityToDelete);
+            await db.SaveChangesAsync();
+
+            return Results.Ok("Entity Deleted");
+
         }).WithTags("Entity");
     }
 
