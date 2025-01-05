@@ -31,6 +31,48 @@ public static class RestaurantEndpoint
         })
         .WithTags("Restaurant");
 
+        app.MapGet("/api/get-restaurants", async (AppDbContext db) =>
+        {
+            var restaurants = await db.Restaurants.ToListAsync();
+
+            return Results.Ok(restaurants);
+
+        }).WithTags("Restaurant");
+
+        app.MapGet("/api/get-restaurant/{id:int}", async (int id, AppDbContext db) =>
+        {
+
+            var restaurant = await db.Restaurants.FindAsync(id);
+
+            if (restaurant == null)
+            {
+                return Results.BadRequest("Restaurant Not Found");
+            }
+
+            return Results.Ok(restaurant);
+
+        }).WithTags("Restaurant");
+
+        app.MapPatch("/api/restaurant/{id:int}/update", async (int id, UpdateRestaurant up, AppDbContext db) =>
+        {
+
+            var restaurantToUpdate = await db.Restaurants.FindAsync(id);
+
+            if (restaurantToUpdate == null)
+            {
+                return Results.BadRequest("Restaurant Not Found");
+            }
+
+            restaurantToUpdate.Description = up.Description;
+            restaurantToUpdate.Name = up.Name;
+
+            db.Restaurants.Update(restaurantToUpdate);
+            await db.SaveChangesAsync();
+
+            return Results.Ok("Restaurant Updated");
+
+        }).WithTags("Restaurant");
+
         app.MapDelete("/api/delete-restaurant", [Authorize(Roles = "Admin,User")] async (int id, AppDbContext db, HttpContext httpContext, UserManager<ApplicationUser> userManager) =>
         {
             var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
